@@ -1,0 +1,331 @@
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/*
+
+TABLE OF CONTENT
+
+
+1- Profile sidebar
+2- Navigation
+3- Search buttons
+4- Books results
+
+
+*/
+
+
+/* ADMIN */
+/*      RENTED PARTIALS     */
+.rentedBy{
+    list-style: none;
+    color: #333333;
+    font-size: 11px;
+    line-height: 0.5;
+    margin-top: 12px;
+}
+
+/*      MANAGER PARTIAL     */
+.modify input,textarea{
+    width: 100%;
+    height: 43px;
+    padding: 6px 12px 6px 12px;
+    border: 1px solid #cbd5dd;
+}
+
+.modify label{
+    margin-top: 6px;
+}
+
+.save{
+    margin: 0;
+    margin-top: 20px;
+}
+
+/* Profile sidebar */
+
+body{
+
+    background-color: #f3f3f3
+
+}
+
+
+.btn-logout{
+	background-color: #16a085;
+    padding: 6px 10px;
+    border: 1px solid #26b095;
+    margin-top: 10px;
+    /*-moz-box-shadow: 0px 5px 2px 0px #656565;
+    -webkit-box-shadow: 0px 5px 2px 0px #656565;
+    -o-box-shadow: 0px 5px 2px 0px #656565;*/
+    box-shadow: 0px 1px 2px 0px #000;
+    /*filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=180, Strength=2);*/
+}
+
+.btn-logout:hover{
+    /*background-color: #1abc9c;*/
+    background-color: #16a085;
+    border: 1px solid #26b095;
+    box-shadow: none;
+}
+
+.sidebar-brand{
+    /*text-align: left;*/
+    margin-top: 50px;
+    /*height: 65px;*/
+    font-size: 14px;
+    /*line-height: 60px;*/
+    text-align: center;
+}
+
+.sidebar-brand img {
+    border-radius: 50px;
+    width: 60px;
+    height: 60px;
+
+}
+
+.sidebar-brand .infos {
+    display: block;
+    background-color: rgba(0,0,0,0.2);
+    margin-top: 15px;
+    /*padding-left: 30px;*/
+    color: #999999;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.sidebar-brand span {
+    display: block;
+}
+
+.sidebar-brand .infos a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+#menu-toggle{
+    font-size: 20px;
+    color: #333333;
+    /*left: -20px;
+    top: -10px;*/
+}
+
+#menu-toggle:hover{
+    text-decoration: none;
+}
+
+.admin{
+    background-color: rgba(0,0,0,0.2);
+    padding: 4px 6px;
+    /*border: 1px solid #c0392b;*/
+    margin-top: 15px;
+    box-shadow: 0px 1px 2px 0px #000;
+    color: #fff;
+    margin: 15px auto;
+    width: 100px;
+}
+
+/*  Search buttons */
+
+.search{
+    height: 44px;
+    border: 1px solid #cbd5dd;
+    background-color: #fff;
+    color: #767676;
+    font-size: 14px;
+    padding: 6px 12px 6px 12px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px; 
+}
+
+/*  Books results */
+
+.result{
+    margin-top: 30px;
+    border: 1px solid #cbd5dd;
+    background: #fff;
+    height: 290px;
+}
+
+.result img{
+    width: 100%;
+}
+
+.result h5{
+    /*padding: 10px;*/
+    /*text-indent: 15px;*/
+    padding-left: 15px;
+    padding-right: 15px;
+    color:  #767676;
+    line-height: 1.3;
+    margin-bottom: -5px
+}
+
+.result h6{
+    padding-left: 15px;
+    padding-right: 15px;
+    /*color:  #767676;*/
+}
+
+
+.noResult{
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+
+
+/* btn rendre*/
+
+.btn-rendre{
+    background-color: #16a085;
+    padding: 6px 10px;
+    border: 1px solid #26b095;
+    margin-top: 20px;
+    box-shadow: 0px 1px 2px 0px #000;
+    margin-left: 15px;
+}
+
+.btn-rendre:hover{
+    background-color: #16a085;
+    border: 1px solid #26b095;
+    box-shadow: none;
+}
+
+
+/* btn rent*/
+
+.btn-rent{
+    background-color: #16a085;
+    padding: 6px 10px;
+    border: 1px solid #26b095;
+    margin-top: 20px;
+    box-shadow: 0px 1px 2px 0px #000;
+    margin-left: 15px;
+}
+
+.btn-rent:hover{
+    background-color: #16a085;
+    border: 1px solid #26b095;
+    box-shadow: none;
+}
+
+
+
+/* Toggle Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 250px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #383d43;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 0px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    margin-top: 320px;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+
+    .result{
+    height: 320px;
+    }
+}

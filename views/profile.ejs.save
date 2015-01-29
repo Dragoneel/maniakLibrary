@@ -1,0 +1,55 @@
+<!doctype html>
+<html ng-app="maniak">
+<head>
+	<title>Node Authentication</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+
+	<!-- ANGULARJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.js"></script><!-- load angular 
+    -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.6/angular-route.js"></script>
+
+    <script src="js/controllers/main.js"></script> <!-- load up our controller -->
+    <script src="js/services/books.js"></script> <!-- load our todo service -->
+    <script src="js/core.js"></script> <!-- load our main application -->
+    <script src="/angoose/angoose-client.js"></script> <!-- Angoose remote methode call for angularjs-->
+
+    <script type="text/javascript">
+		userID="<%=user._id%>";
+	</script>
+    
+
+</head>
+<body  ng-controller="mainController">
+<div class="container" >
+
+	<div class="page-header text-center">
+		<h1><span class="fa fa-anchor"></span> Profile Page</h1>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a> <br/><br/>
+		<a  class="btn" href="#/">Find books</a>
+		<a  class="btn" href="#/mybooks">My books</a>
+	</div>
+
+
+	<div style="padding-bottom:100px;">
+
+			<!-- Show the partials -->
+			<div ng-view></div>
+
+	</div>
+
+
+
+
+
+
+
+
+</div>
+</body>
+</html>

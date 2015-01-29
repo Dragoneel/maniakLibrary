@@ -1,0 +1,107 @@
+
+<div class="col-lg-12" ng-controller="addController">
+ 
+
+                        <div class="row">
+
+
+                        	<div ng-if="hits.isSaved" class="alert alert-success noResult" style="margin-top:50px">
+							        saved successfuly
+							</div>
+
+							<div ng-if="hits.isSaved != true" class="col-lg-12 modify">
+								
+		                        <!-- <h3 style="margin-bottom:20px">Add new book</h3>
+			                    <form name="newBook">
+			                        <label>Title:</label>
+			                        <input type="text" ng-model="newBookData.title" />
+			                        <label>Isbn:</label>
+			                        <input type="text" ng-model="newBookData.isbn" />
+			                        <label>Author:</label>
+			                        <input type="text" ng-model="newBookData.author" />
+			                        <label>Genre:</label>
+			                        <input type="text" ng-model="newBookData.genre" />
+			                        <label>Published:</label>
+			                        <input type="text" ng-model="newBookData.published" />
+			                        <label>Pages:</label>
+			                        <input type="number" ng-model="newBookData.pages" min="0" max="99" required/>
+				                        <span class="error" ng-show="newBook.input.$error.required">
+									    Required!</span>
+									    <span class="error" ng-show="newBook.input.$error.number">
+									    Not valid number!</span>
+			                        <label>Number of copy:</label>
+			                        <input type="number" ng-model="newBookData.nb_copy" />
+			                        <label>Resume:</label>
+			                        <textarea style="height:150px" ng-model="newBookData.resume" ></textarea>	 -->
+			                        <!--  <button  class="btn btn-primary save"  ng-click="saveBook(newBookData)">Save</button> -->
+			                    <!--      <input type="submit" ng-click="saveBook(newBookData)" value="Save" />
+			                    </form>
+
+							</div>
+
+-->
+								    <form name="bookForm" ng-submit="saveBook(bookForm.$valid,book)" novalidate>
+								    	<h3 style="margin-bottom:20px">Add new book</h3>
+								        <!-- NAME -->
+								        <div class="form-group" ng-class="{ 'has-error' : bookForm.title.$invalid && !bookForm.title.$pristine }">
+								            <label>Title *</label>
+								            <input type="text" name="title" class="form-control" ng-model="book.title" required>
+								            <p ng-show="bookForm.title.$invalid && !bookForm.title.$pristine" class="help-block">Title is required.</p>
+								        </div>
+
+								        <!-- ISBN -->
+								        <div class="form-group">
+								            <label>Isbn</label>
+								            <input type="text" name="isbn" class="form-control" ng-model="book.isbn">
+								        </div>
+
+								        <!-- AUTHOR -->
+								        <div class="form-group" ng-class="{ 'has-error' : bookForm.author.$invalid && !bookForm.author.$pristine }">
+								            <label>Author *</label>
+								            <input type="text" name="author" class="form-control" ng-model="book.author" required>
+								            <p ng-show="bookForm.author.$invalid && !bookForm.author.$pristine" class="help-block">Author is required.</p>
+								        </div>
+
+								        <!-- GENRE -->
+								        <div class="form-group">
+								            <label>Genre</label>
+								            <input type="text" name="genre" class="form-control" ng-model="book.genre">
+								        </div>
+
+								        <!-- PUBLISHED -->
+								        <div class="form-group">
+								            <label>Published</label>
+								            <input type="date" name="published" class="form-control" ng-model="book.published">
+								        </div>
+
+								        <!-- PAGES -->
+								        <div class="form-group" ng-class="{ 'has-error' : bookForm.pages.$invalid && !bookForm.pages.$pristine }">
+								            <label>Pages</label>
+								            <input type="number" name="pages" class="form-control" ng-model="book.pages">
+								            <p ng-show="bookForm.pages.$invalid && !bookForm.pages.$pristine" class="help-block">Enter a valid number.</p>
+								        </div>
+
+								        <!-- NUMBER OF COPY -->
+								        <div class="form-group" ng-class="{ 'has-error' : bookForm.nb_copy.$invalid && !bookForm.nb_copy.$pristine }">
+								            <label>Number of copy</label>
+								            <input type="number" name="nb_copy" class="form-control" ng-model="book.nb_copy">
+								            <p ng-show="bookForm.nb_copy.$invalid && !bookForm.nb_copy.$pristine" class="help-block">Enter a valid number.</p>
+								        </div>
+
+								            
+								        <!-- RESUME -->
+								        <div class="form-group" >
+								            <label>Resume</label>
+								            <textarea style="height:150px;" name="resume" class="form-control" ng-model="book.resume"></textarea>
+								        </div>
+								        
+								        <button type="submit" class="btn btn-primary save">Save</button>
+								        
+								    </form>
+
+                        </div>
+
+                        
+</div>
+
+

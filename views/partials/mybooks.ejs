@@ -1,0 +1,24 @@
+
+
+<div class="col-lg-12" ng-controller="profileController">
+                        <div class="row">
+	                        	<div ng-if="books.isMessage">
+								        Added successfuly
+								</div>
+
+								<div  ng-repeat="book in books">
+		                            <div class="col-lg-3">
+		                                <div class="result">
+		                                    <img src="http://placehold.it/250x150"/>
+		                                    <h5><strong>{{book.title}}</strong></h5>
+		                                    <h6>By {{book.author}}</h6>
+		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
+		                                    <h5>{{book.published}}</h5>
+
+		                            <button  class="btn btn-primary btn-rendre" ng-click="rendreBook(book._id)">Rendre</button>
+		                                </div>
+
+		                            </div>
+		                        </div>
+                        </div>
+</div>

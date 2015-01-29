@@ -1,0 +1,34 @@
+
+<div class="col-lg-12" ng-controller="mainController">
+                        <form>
+                            <input type="text" placeholder="Looking for a book ?" class="search" ng-change="searchBooks()" value="" ng-model="formData.text"/>
+                        </form>
+                        <div class="row">
+
+                        	<div ng-if="hits.isMessage" class="alert alert-success noResult">
+							        Added successfuly
+							</div>
+
+
+							<div ng-if="hits.length == 0" class="alert alert-danger noResult">
+							        No results
+							</div>
+
+							<div ng-if="hits.isMessage == undefined">
+								<div  ng-repeat="book in hits">
+		                            <div class="col-lg-3">
+		                                <div class="result">
+		                                    <img src="http://placehold.it/250x150"/>
+		                                    <h5><strong>{{book.title}}</strong></h5>
+		                                    <h6>By {{book.author}}</h6>
+		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
+		                                    <h5><strong>Remaining copy:</strong> {{book.nb_copy}}</h5>
+		                                <button  class="btn btn-primary btn-rent" ng-click="rentBook(book._id)">Rent</button>
+		                                </div>
+		                            </div>
+		                        </div>
+	                        </div>
+                        </div>
+</div>
+
+

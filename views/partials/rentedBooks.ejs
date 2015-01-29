@@ -1,0 +1,26 @@
+
+
+<div class="col-lg-12" ng-controller="bookController">
+                        <div class="row">
+	                        	<div ng-if="books.isMessage">
+								        Added successfuly
+								</div>
+
+								<div  ng-repeat="book in rentedBooks">
+		                            <div class="col-lg-3">
+		                                <div class="result">
+		                                    <img src="http://placehold.it/250x150"/>
+		                                    <h5><strong>{{book.title}}</strong></h5>
+		                                    <h6>By {{book.author}}</h6>
+		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
+		                                    <h5>{{book.published}}</h5>
+		                                    <h5>Rented by:</h5>
+								            <ul ng-repeat="user in book.users_id" class="rentedBy">
+											  <li>{{user.email}}</li>
+											</ul>
+		                                </div>
+
+		                            </div>
+		                        </div>
+                        </div>
+</div>
