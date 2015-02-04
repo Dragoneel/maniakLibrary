@@ -12,6 +12,7 @@ var Book = require('./app/models/book');
 
 // load up the user model
 var User = require('./app/models/user');
+var bcrypt   = require('bcrypt-nodejs');
 
 
 // Query dbpedia for some books
@@ -22,8 +23,6 @@ var query = "SELECT   ?title ?pages ?published ?genreName ?isbn ?resume  (SAMPLE
 var client = new SparqlClient(endpoint);
 	client.query(query)
 	  .execute(function(error, results) {
-	  	// console.log(results.results.bindings[i]);
-
 
 	  	for (i in results.results.bindings)
 		{
@@ -42,17 +41,10 @@ var client = new SparqlClient(endpoint);
 
 		  	 newBook.save(function(err) {
 	                            if (err)
-	                               console.log(err);
+	                               // console.log(err);
 	         });
 		}
 
-
-
-
-
-		console.log("=========================================");
-		console.log("==                DONE                 ==");
-		console.log("=========================================");
 
 
 
@@ -64,7 +56,8 @@ var newUser = new User()
 
 newUser.name  = "Infomaniak";
 newUser.email = "devs@infomaniak.ch";
-newUser.password = "maniak";
+newUser.password = bcrypt.hashSync("maniak", bcrypt.genSaltSync(8), null);
+
 
 newUser.save(
 		function  (err) {
