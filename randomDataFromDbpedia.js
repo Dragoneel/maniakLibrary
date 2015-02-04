@@ -57,6 +57,7 @@ var newUser = new User()
 newUser.name  = "Infomaniak";
 newUser.email = "devs@infomaniak.ch";
 newUser.password = bcrypt.hashSync("maniak", bcrypt.genSaltSync(8), null);
+newUser.profile = "admin";
 
 
 newUser.save(
