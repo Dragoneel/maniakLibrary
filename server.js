@@ -54,4 +54,4 @@ require('./app/backOffice.js')(app, passport);
 
 // launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('Listening to port ' + port);

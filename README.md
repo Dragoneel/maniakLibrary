@@ -1,5 +1,19 @@
 # Maniak Library
 
+How to install 
+
+```sh
+$ sudo npm install
+```
+
+Run 
+
+```sh
+$ mongod --dbpath path/to/database
+```
+
+
+
 
 ## Credits
 

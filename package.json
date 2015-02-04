@@ -1,5 +1,5 @@
 {
-  "name": "node-authentication",
+  "name": "maniakLibrary",
   "main": "server.js",
   "dependencies": {
     "angoose": "^0.3.21",
