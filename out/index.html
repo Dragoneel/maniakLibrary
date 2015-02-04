@@ -17,10 +17,34 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Introduction</h1>
 
     
-
+    <p>
+        Maniak Library est une application web pour gérer les emprunts de livres.
+    </p>
+    <p>
+        L'utilisateur "normal" peut :
+        <ul>
+            <li>Créer un compte</li>
+            <li>Louer un livre</li>
+            <li>Rendre un livre</li>
+        </ul> 
+    </p>
+    <p>
+        L'utilisateur "admin" peut :
+        <ul>
+            <li>Créer / modifier / supprimer un livre</li>
+            <li>Ajouter un autre administrateur</li>
+            <li>Visualiser les livres emprunter par les utilisateurs</li>
+        </ul> 
+    </p>
+    <p>
+        Quand un utilisateur "normal" devient "admin" il rend tous les livres qu'il a déja emprunter 
+    </p>
+    <p>
+        Pour que ça soit plus réaliste, on peut implementer un systeme de token, chaque livre emprunter aurra un identifiant unique, l'utilisateur récupère le livre à l'aide de ce dernier. Coté administrateur, on vérifie le token à l'aide d'un scanner ( qrcode par exemple ).
+    </p>
 
 
     
@@ -50,7 +74,7 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-BackOffice.html">BackOffice</a></li><li><a href="module-FrontOffice.html">FrontOffice</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getBooks">getBooks</a></li><li><a href="global.html#getGravatarImage">getGravatarImage</a></li><li><a href="global.html#getRentedBooks">getRentedBooks</a></li><li><a href="global.html#getUsers">getUsers</a></li><li><a href="global.html#isLoggedInAdmin">isLoggedInAdmin</a></li><li><a href="global.html#isLoggedInNormal">isLoggedInNormal</a></li><li><a href="global.html#md5">md5</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="backOffice.js.html">BackOffice</a></li><li><a href="frontOffice.js.html">FrontOffice</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getBooks">getBooks</a></li><li><a href="global.html#getGravatarImage">getGravatarImage</a></li><li><a href="global.html#getRentedBooks">getRentedBooks</a></li><li><a href="global.html#getUsers">getUsers</a></li><li><a href="global.html#isLoggedInAdmin">isLoggedInAdmin</a></li><li><a href="global.html#isLoggedInNormal">isLoggedInNormal</a></li><li><a href="global.html#md5">md5</a></li></ul>
 </nav>
 
 <br class="clear">
