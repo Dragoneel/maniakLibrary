@@ -21,6 +21,7 @@ $ node randomDataFromDbpedia.js
 Live demo
 
 email: devs@infomaniak.ch
+
 password: maniak
 - [Demo](http://92.222.34.47:8080/)
 
