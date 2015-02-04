@@ -56,8 +56,8 @@
                     <img src="<%=avatar%>">
                     <span class="admin">Administrator</span>
                     <div class="infos">
-                        <span><%=user.local.email%></span>
-                        <span>Rented books until now : 20</span>
+                        <span>Welcome back <strong><%=user.name%></strong> </span>
+                        <span>Rented books until now : <%=bookNumber%></span>
                         <a href="/logout" class="btn btn-primary btn-logout">Logout</a>
                     </div>
             </div>
@@ -70,6 +70,9 @@
                 </li>
                 <li>
                     <a href="#/addBook">Add new book</a>
+                </li>
+                <li>
+                    <a href="#/manageUser">Add an administrator</a>
                 </li>
             </ul>
         </div>

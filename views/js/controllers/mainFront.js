@@ -2,7 +2,6 @@
 var searchController = angular.module('searchController',['ngRoute','angoose.client']);
 
 	searchController.config(function($routeProvider,$locationProvider) {
-		// $locationProvider.html5Mode(true);
 	  $routeProvider
 	    .when('/', { templateUrl: 'partials/search', controller: 'mainController' })
 	    .when('/mybooks', { templateUrl: 'partials/mybooks', controller: 'profileController'})
@@ -10,15 +9,28 @@ var searchController = angular.module('searchController',['ngRoute','angoose.cli
 	});
 
 
+	/**
+	 * Highlight for searched words
+	 */
+	searchController.filter('highlight', function($sce) {
+		return function(text, phrase) {
+		if (phrase) text = text.replace(new RegExp(phrase, 'gi'),
+
+		'<span class="highlighted">$&</span>');
+
+		return $sce.trustAsHtml(text)
+		  }
+	});
+
+
+	/**
+	 * Profile controller ( find and give back)
+	 */
 	searchController.controller('profileController', ['$scope','$http','Book','BooksFactory', function($scope, $http, Book,BooksFactory) {
 
 
 		$scope.userID = window.x;
 		var userID = $scope.userID;
-
-		
-		
-
 
 		Book.find({
 			"users_id.id": userID
@@ -30,7 +42,9 @@ var searchController = angular.module('searchController',['ngRoute','angoose.cli
 		});
 
 
-		// RENDRE ==================================================================
+		/**
+		 * Give back a book when the rendreBook button is fired
+		 */
 		$scope.rendreBook = function(id) {
 			// $routeProvider.reload();
 			BooksFactory.rendre(id)
@@ -50,16 +64,20 @@ var searchController = angular.module('searchController',['ngRoute','angoose.cli
 	}]);
 
 
+	/**
+	* Main controller ( searh book, rent book, display rented books)
+	*/
 	searchController.controller('mainController', ['$scope','$http','BooksFactory', function($scope, $http, BooksFactory,$routeProvider) {
 
 		
 
 		$scope.formData = {};
 
-		// 
 
 
-		// FIND BOOKS ==================================================================
+		/**
+		 * Find a book according to the user input
+		 */
 		$scope.searchBooks = function() {
 
 			if ($scope.formData.text != undefined) {
@@ -75,7 +93,9 @@ var searchController = angular.module('searchController',['ngRoute','angoose.cli
 		};
 
 
-		// RENT ==================================================================
+		/**
+		 * Rent a book when the rentBook button is fired
+		 */
 		$scope.rentBook = function(id) {
 			// $routeProvider.reload();
 			BooksFactory.rent(id)
@@ -85,7 +105,9 @@ var searchController = angular.module('searchController',['ngRoute','angoose.cli
 				});
 		};
 
-		// Get rented books
+		/**
+		 * Display rented books when the rentedBooks partial view is displayed
+		 */
 		$scope.rentedBooks = function(id) {
 			BooksFactory.rented(id)
 				.success(function(data) {

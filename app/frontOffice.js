@@ -2,10 +2,10 @@ var Book       = require('./models/book');
 var newBook            = new Book();
 var crypto = require("crypto");
 
-
-
 /**
  * Gets a gravatar image for the specified email address and optional arguments.
+ * @param {string} email - user mail
+ * @param {string} args - additionnal argument for the image size
  */
 function getGravatarImage(email, args) {
     args = args || "";
@@ -16,6 +16,7 @@ function getGravatarImage(email, args) {
 
 /**
  * MD5 hashes the specified string.
+ * @param {string} srt - string to be hashed
  */
 function md5(str) {
     str = str.toLowerCase().trim();
@@ -27,21 +28,34 @@ function md5(str) {
 
 /**
  * Get list of available books from the user input
+ * @param {string} input - The searched word.
+ * @param {Object} res - Body object
+ * @param {User} user - User object
  */
 function getBooks(res,input,user){
 
     	// console.log("####### Current User ID >>>  "+user._id);
+    	var regexSearch = new RegExp([input].join(""),"i");
 
 		Book.find({
-			$and: [
-			  { author: { $regex: ".*"+input+".*" } },
+			$or: [ 
+			  {
+			  			$and: [
+			  { author: { $regex: regexSearch } },
 			  { "users_id.id": {$ne:user._id.toString()} },
 			  { nb_copy: { $gt: 0 }	}
-			]
-		 // author: input 
+			  			]
+			  		},
+			  		{
+			  			$and: [
+			  { title: { $regex: regexSearch } },
+			  { "users_id.id": {$ne:user._id.toString()} },
+			  { nb_copy: { $gt: 0 }	}
+			  			]
+			  		}
+			  		
+			  	]
 		}, function foundBooks(err, items) {
-				 // getRentedBooks(res,user,"name");
-				 // console.log(items);
 	     		 res.json(items);
     	});
 
@@ -49,66 +63,82 @@ function getBooks(res,input,user){
 
 /**
  * Inject the user informations to the profile partial
+ * @param {string} input - The searched word
+ * @param {Object} res - Body object
+ * @param {User} user - User object
  */
 function getRentedBooks(res,user,name){
 
-    	console.log("####### Current User ID >>>  "+user._id);
-
     	Book.find({
 			   "users_id.id": user._id 
-		 // author: input 
 		}, function foundBooks(err, items) {
 	     		 res.render('partials/' + name,{user : user});
     	});
 		
-
 };
 
+/**
+ * Route middleware to ensure user is logged in (Normal User)
+ * @param {Object} req - request object
+ * @param {Object} res - result object
+ * @param {Object} next - next object
+ */
+function isLoggedInNormal(req, res, next) {
 
+	if (req.isAuthenticated() && req.user.profile == "normal")
+		return next();
+
+	res.redirect('/login');
+
+}
+
+/** @module FrontOffice */
 module.exports = function(app, passport) {
 
-// normal routes ===============================================================
 
-	// show the home page (will also have our login links)
+	/**
+	 * Show the home page
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.get('/', function(req, res) {
 		res.render('index.ejs');
-		// res.render('login.ejs', { message: req.flash('loginMessage') });
 	});
 
+
+	/**
+	 * Partial route for frontOffice and backOffice
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.get('/partials/:name', function (req, res) {
 	  var name = req.params.name;
 	  if(name == 'search'){
 	  	res.render('partials/'+name);
 	  }
 	  if(name == 'mybooks'){
-	  	// var items = getRentedBooks(req.user);
-	  	// console.log("mybooks");
 	  	getRentedBooks(res,req.user,name);
 	  }
 	  if(name == 'rentedBooks'){
-	  	// console.log("rentedBooks");
 	  	res.render('partials/'+name);
 	  }
 	  if(name == 'manageSearch'){
 	  	res.render('partials/' + name);
 	  }
 	  if(name == 'addBook'){
-	  	// getRentedBooks(res,req.user,name);
+	  	res.render('partials/' + name);
+	  }
+	  if(name == 'manageUser'){
 	  	res.render('partials/' + name);
 	  }
 	});
 
-	// get search view
-	// app.get('/get/search', function(req, res) {
-	// 	// console.log(req.params.search); 
-	// 	res.json({isSearch:true});
-	// });
-
-	// // get profile view
-	// app.get('/get/profile', function(req, res) {
-	// 	res.json({isProfile:true});
-	// });
 	
+	/**
+	 * Search books route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.post('/search/books', function(req, res) {
 
 		var input = req.body.text;
@@ -118,12 +148,21 @@ module.exports = function(app, passport) {
 
 	});
 
+	/**
+	 * Rented book route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.delete('/rented/book/:user_id', function(req, res) {
 
 		res.json({isTrue:true});
 	});
 
-	// rent a book
+	/**
+	 * Rent book
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.delete('/rent/book/:book_id', function(req, res) {
 
 		var currentBookID = req.params.book_id;
@@ -132,11 +171,7 @@ module.exports = function(app, passport) {
 		console.log("####### Current Book ID >>>  "+currentBookID);
 
 		var query = { 
-			// "users_id": { "id" : user._id }
-			// $and: [ 
 			 _id: currentBookID
-			//  // { users_id:{ id: { $ne: user._id } }  }
-			// ]
 		};
 
    						// PULL AN ELEMENT FROM THE ARRAY
@@ -144,7 +179,7 @@ module.exports = function(app, passport) {
 											{
 												 users_id: {
 												 	"id": userid.toString(),
-												 	"email": req.user.local.email
+												 	"name": req.user.name
 												 }
 											},
 										$inc:
@@ -161,34 +196,22 @@ module.exports = function(app, passport) {
 						  }
 						});
 
-		// Update the profile view
-		// Book.find({
-		// 	  "users_id.id": userid.toString()
-		// }, function foundBooks(err, items) {
-		// 		 // getRentedBooks(res,user,"name");
-		// 		 // console.log(items);
-	 //     		 res.json(items);
-  //   	});
-
-		// res.render('profile.ejs', {
-		// 	user : req.user, message : 'Added successfully'
-		// });
 		res.json({isMessage: true});
 
 	});
 
-// delete a todo
+	/**
+	 * Give back books route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.delete('/rendre/book/:book_id', function(req, res) {
 
 		var currentBookID = req.params.book_id;
 		var userid = req.user._id;
 
 		var query = { 
-			// "users_id": { "id" : user._id }
-			// $and: [ 
 			 _id: currentBookID
-			//  // { users_id:{ id: { $ne: user._id } }  }
-			// ]
 		};
 
    						// PULL AN ELEMENT FROM THE ARRAY
@@ -196,7 +219,7 @@ module.exports = function(app, passport) {
 											{
 												 users_id: {
 												 	"id": userid.toString(),
-												 	"email": req.user.local.email
+												 	"name": req.user.name
 												 }
 											},
 										$inc:
@@ -217,198 +240,126 @@ module.exports = function(app, passport) {
 
 	});
 
-	// PROFILE SECTION =========================
-	app.get('/profile',isLoggedIn, function(req, res) {
+	/**
+	 * Profile route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/profile',isLoggedInNormal, function(req, res) {
 
 
+        var gravatar = getGravatarImage(req.user.email, ".jpg?s=100");
+        console.log(req.user._id);
 
-
-
-						// create new book
-                        
-
-      //                   Book.remove({}, function(err) { 
-						//    console.log('collection removed') 
-						// });
-
-						// newBook.title    = 'Data Mining';
-      //                   newBook.isbn    = 'isbn xyz';
-      //                   newBook.author    = 'imane';
-      //                   newBook.published    = new Date();
-      //                   newBook.pages    = 300;
-                        
-
-      //                   newBook.save(function(err) {
-      //                       if (err)
-      //                           return done(err);
-      //                   });
-
-
-//////////////////
-		// var update = { $push : {
-		// 	// 					    users_id :  {
-		// 	// 					             "id": "three"
-		// 	// 					           }
-		// 	// 					  }
-   // };
-//////////////////
-
-                        // var query = {"_id": "54bcf4b85d3a3cb318b135f4","isbn":"isbn xyz"};
-
-                        // ADD AN OBJECT ARRAY
-						// var update = { users_id: [{id: 'two'}] };
-
-						// ADD AN ELEMENT TO THE ARRAY
-						// var update = { 
-						// 	$push : {
-						// 		    users_id :  {
-						// 		             "id": "three"
-						// 		           }
-						// 		  }
-   			// 			};
-
-   						// PULL AN ELEMENT FROM THE ARRAY
-						// var update = {  $push: 
-						// 					{
-						// 						 users_id: {
-						// 						 	"id": req.user._id
-						// 						 }
-						// 					}	
-						// };
-
-						// var options = {new: true};
-						// Book.findOneAndUpdate(query, update, options, function(err, book) {
-						//   if (err) {
-						//     console.log('got an error');
-						//   }
-						// });
+        Book.where({
+		 	"users_id.name": req.user.name
+		}).count(function (err, count) {
+			  if (err) return handleError(err);
+				  res.render('profile.ejs', {
+						user : req.user, avatar: gravatar, bookNumber: count
+					});
+			})
 
 
 		
-
-
-        var gravatar = getGravatarImage(req.user.local.email, ".jpg?s=100");
 		
-        console.log(req.user.local.email+" ===> "+gravatar);
-
-		res.render('profile.ejs', {
-			user : req.user, avatar: gravatar
-		});
 
 	});
 
 
-	// PROFILE SECTION =========================
-	app.get('/admin',isLoggedIn, function(req, res) {
-		
-
-        console.log("Admin section");
-
-         var gravatar = getGravatarImage(req.user.local.email, ".jpg?s=100");
-
-		res.render('admin.ejs', {
-			user : req.user, avatar: gravatar
-		});
-
-	});
-
-
-
-
-
-	// LOGOUT ==============================
+	/**
+	 * Logout route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.get('/logout', function(req, res) {
 		req.logout();
 		res.redirect('/');
 	});
 
-// =============================================================================
-// AUTHENTICATE (FIRST LOGIN) ==================================================
-// =============================================================================
+	/**
+	 * Show the login form
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/login', function(req, res) {
+		res.render('login.ejs', { message: req.flash('loginMessage') });
+	});
 
-	// locally --------------------------------
-		// LOGIN ===============================
-		// show the login form
-		app.get('/login', function(req, res) {
-			res.render('login.ejs', { message: req.flash('loginMessage') });
-		});
-
-		// process the login form
-		app.post('/login', passport.authenticate('local-login', {
-			// successRedirect : '/profile', // redirect to the secure profile section
-			failureRedirect : '/login', // redirect back to the signup page if there is an error
-			failureFlash : true // allow flash messages
-		}),
-		function(req, res) {
-	  
-			if (req.user.local.email == "contact@dchar.co") { 
-				res.redirect('/admin');
-			}
-			else{
+	/**
+	 * Process the login form
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.post('/login', passport.authenticate('local-login', {
+		// successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/login', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}),
+	function(req, res) {
+	 
+		if (req.user.profile == "admin") { 
+			res.redirect('/admin');
+		}
+		else{
 
 				res.redirect('/profile');
 			}
 
-		});
+	});
 
-		// SIGNUP =================================
-		// show the signup form
-		app.get('/signup', function(req, res) {
-			res.render('signup.ejs', { message: req.flash('signupMessage') });
-		});
+	/**
+	 * Show the signup form
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/signup', function(req, res) {
+		res.render('signup.ejs', { message: req.flash('signupMessage') });
+	});
 
-		// process the signup form
-		app.post('/signup', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
-			failureRedirect : '/signup', // redirect back to the signup page if there is an error
-			failureFlash : true // allow flash messages
-		}));
+		
+	/**
+	 * Process the signup form
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.post('/signup', passport.authenticate('local-signup', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/signup', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
 
 
+	/**
+	 * Route when already loged
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/connect/local', function(req, res) {
+		res.render('connect-local.ejs', { message: req.flash('loginMessage') });
+	});
 
-// =============================================================================
-// AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
-// =============================================================================
-
-	// locally --------------------------------
-		app.get('/connect/local', function(req, res) {
-			res.render('connect-local.ejs', { message: req.flash('loginMessage') });
-		});
-		app.post('/connect/local', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
-			failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
-			failureFlash : true // allow flash messages
-		}));
+	app.post('/connect/local', passport.authenticate('local-signup', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
 
 	
-// =============================================================================
-// UNLINK ACCOUNTS =============================================================
-// =============================================================================
-// used to unlink accounts. for social accounts, just remove the token
-// for local account, remove email and password
-// user account will stay active in case they want to reconnect in the future
 
-	// local -----------------------------------
-	app.get('/unlink/local', isLoggedIn, function(req, res) {
+	/**
+	 * Unlik account (delete account)
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/unlink/local', isLoggedInNormal, function(req, res) {
 		var user            = req.user;
-		user.local.email    = undefined;
-		user.local.password = undefined;
+		user.email    = undefined;
+		user.password = undefined;
 		user.save(function(err) {
 			res.redirect('/');
 		});
 	});
-
-// =============================================================================
-// RENT BOOKS =============================================================
-// =============================================================================
-
-	// Rent one book
-	// app.get('/rent/book', isLoggedIn, function(req, res) {
-	// 	var user            = req.user;
-	// 	console.log("===============> "+user._id);
-	// });
-
-
 
 
 };
@@ -416,10 +367,4 @@ module.exports = function(app, passport) {
 
 
 
-// route middleware to ensure user is logged in
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated())
-		return next();
 
-	res.redirect('/login');
-}

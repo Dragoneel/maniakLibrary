@@ -19,11 +19,22 @@
 		                            <div class="col-lg-3">
 		                                <div class="result">
 		                                    <img src="http://placehold.it/250x150"/>
-		                                    <h5><strong>{{book.title}}</strong></h5>
-		                                    <h6>By {{book.author}}</h6>
-		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
-		                                    <h5><strong>Remaining copy:</strong> {{book.nb_copy}}</h5>
-		                                <button  class="btn btn-primary btn-rent" ng-click="rentBook(book._id)">Rent</button>
+
+		                                    	<div class="topInformations">
+				                                    <h5><strong><span ng-bind-html="book.title.substr(0,30) | highlight:formData.text"></span></strong></h5>
+				                                    <!-- <h3  ng-bind-html="book.title | highlight:formData.text"></h3> -->
+				                                    <h6>By 
+				                                    	<span ng-bind-html="book.author | highlight:formData.text"></span>
+				                                    </h6>
+				                                    <h6><strong>ISBN:</strong> {{book.isbn.substr(0,10)}}</h6>
+				                                    <h6><strong>Remaining copy:</strong> {{book.nb_copy}}</h6>
+				                                </div>
+
+				                                <div class="bottomButtons">
+				                                	<button  class="btn btn-rent" ng-click="rentBook(book._id)">Rent</button>
+				                                </div>
+
+		                                
 		                                </div>
 		                            </div>
 		                        </div>

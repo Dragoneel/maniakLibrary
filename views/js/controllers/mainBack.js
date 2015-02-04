@@ -7,10 +7,28 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 	    .when('/', { templateUrl: 'partials/rentedBooks', controller: 'bookController' })
 	    .when('/manageSearch', { templateUrl: 'partials/manageSearch', controller: 'manageController' })
 	    .when('/addBook', { templateUrl: 'partials/addBook', controller: 'addController'})
+	    .when('/manageUser', { templateUrl: 'partials/manageUser', controller: 'userController'})
 	    .otherwise({redirectTo:'/'});
 	});
 
 
+	/**
+	 * Highlight for searched words
+	 */
+	backController.filter('highlight', function($sce) {
+		return function(text, phrase) {
+		if (phrase) text = text.replace(new RegExp(phrase, 'gi'),
+
+		'<span class="highlighted">$&</span>');
+
+		return $sce.trustAsHtml(text)
+		  }
+	});
+
+
+	/**
+	 * Find rented books and change the scope
+	 */
 	backController.controller('bookController', ['$scope','$http','Book','AdminFactory', function($scope, $http, Book,BooksFactory) {
 
 
@@ -30,6 +48,9 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 	}]);
 
 
+	/**
+	 * Manage books
+	 */
 	backController.controller('manageController', ['$scope','$http','AdminFactory','Book', function($scope, $http, AdminFactory,Book,$routeProvider,$modal, $log) {
 
 
@@ -37,7 +58,9 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 
 
 
-		// FIND BOOKS ==================================================================
+		/**
+		 * Find a book according to user input and change the scope
+		 */
 		$scope.searchBooks = function() {
 
 
@@ -55,7 +78,9 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 		};
 
 
-		// DELETE BOOK ==================================================================
+		/**
+		 * Delete a book when user fire the deleteBook button
+		 */
 		$scope.deleteBook = function(id) {
 			AdminFactory.deleted(id)
 				.success(function(data) {
@@ -65,7 +90,9 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 		};
 
 
-		// MODIFY BOOK ==================================================================
+		/**
+		 * Fetch for a book and populate the form when user fire the modifyBook button
+		 */
 		$scope.modifyBook = function(id) {
 			AdminFactory.modify(id)
 				.success(function(data) {
@@ -98,7 +125,9 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 				});
 		};
 
-		// MODIFY BOOK ==================================================================
+		/**
+		 * Modify a book when user fire the saveModifiedBook button
+		 */
 		$scope.saveModifiedBook = function(valid,bookData) {
 
 			console.log("==========BOOK_ID===========>>>>>"+bookData.title);
@@ -124,44 +153,11 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 			Book.update(query, update, function(err) {
 			  if (err) {
 			    console.log('Book update error');
-			    // $scope.hits = {isUpdated: false};
 			  }
 			});
 
 				$scope.hits = {isUpdated: true};
 		};
-
-		
-
-		// // ADD NEW BOOK ==================================================================
-		// $scope.saveBook = function() {
-
-
-		// 	// var newBook = new Book();
-
-
-		// 	console.log($scope.newBookData.title);
-		// 	// newBook.title= $scope.newBookData.title;
-		// 	// newBook.isbn= $scope.newBookData.isbn;
-		// 	// newBook.author= $scope.newBookData.author;
-		// 	// newBook.published= $scope.newBookData.published;
-		// 	// newBook.pages= $scope.newBookData.pages;
-		// 	// newBook.nb_copy= $scope.newBookData.nb_copy;
-		// 	// newBook.resume= $scope.newBookData.resume;
-		// 	// newBook.genre= $scope.newBookData.genre;
-
-
-		// 	// newBook.save(function(err) {
-  //  //                          if (err)
-  //  //                              console.log(err);
-  //  //                      });
-
-
-		// 	$scope.hits = {isSaved: true};
-
-		// };
-
-
 
 
 
@@ -170,12 +166,16 @@ var backController = angular.module('backController',['ngRoute','angoose.client'
 
 
 
-// MODAL CONTROLLER
+/**
+* Books add controller
+*/
 backController.controller('addController',['$scope','Book', function ($scope,Book) {
 
   
 
-		// ADD NEW BOOK ==================================================================
+		/**
+		 * Save the form when the user click on saveBook
+		 */
 		$scope.saveBook = function(isValid,book) {
 
 			if (isValid) {
@@ -205,3 +205,98 @@ backController.controller('addController',['$scope','Book', function ($scope,Boo
 		};
 
 }]);
+
+
+
+/**
+* User controller ( search and update privilege )
+*/
+backController.controller('userController', ['$scope','$http','User','Book','AdminFactory', function($scope, $http, User,Book,AdminFactory) {
+
+
+
+		$scope.formData = {};
+
+
+
+		/**
+		* Search for user profile according to user input
+		*/
+		$scope.searchUsers = function() {
+
+
+			if ($scope.formData.text != undefined) {
+
+				AdminFactory.searchUsers($scope.formData)
+
+				.success(function(data) {
+						// $scope.formData = {}; // clear the form 
+						$scope.hits = data;
+				});
+
+			}
+
+		};
+
+
+		/**
+		* Change the user privilege ( admin ) and delete user id from the users_id array
+		*/
+		$scope.addPrivilege = function (userID,userName) {
+	
+
+			// Add the admin privilege to the current selected user
+			var query = { 
+			 	_id: userID.toString()
+			};
+
+			var update = { 
+				profile: "admin"
+			};
+
+			var options = {new: true};
+
+			User.update(query, update, options, function(err, user) {
+			  if (err) {
+			    console.log('User update privilege error');
+			  }
+			});
+
+
+			// Delete all rented books
+			var query = { 
+			 	"users_id.id": userID.toString()
+			};
+
+			var update = { 
+										$pull: 
+											{
+												 users_id: {
+												 	"id": userID.toString(),
+												 	"name": userName
+												 }
+											},
+										$inc:
+											{
+												nb_copy: 1
+											}
+			};
+
+			var options = {new: true};
+
+			Book.update(query, update, options, function(err, user) {
+			  if (err) {
+			    console.log('Book rented book error');
+			  }
+			});
+
+
+			// Refresh the view after update
+			$scope.hits = {isUserUpdated:true};	
+
+
+		}
+
+
+
+	}]);

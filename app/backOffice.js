@@ -1,4 +1,5 @@
 var Book       = require('./models/book');
+var User       = require('./models/user');
 var newBook            = new Book();
 var crypto = require("crypto");
 
@@ -6,6 +7,8 @@ var crypto = require("crypto");
 
 /**
  * Gets a gravatar image for the specified email address and optional arguments.
+ * @param {string} email - user mail
+ * @param {string} args - additionnal argument for the image size
  */
 function getGravatarImage(email, args) {
     args = args || "";
@@ -16,6 +19,7 @@ function getGravatarImage(email, args) {
 
 /**
  * MD5 hashes the specified string.
+ * @param {string} srt - string to be hashed
  */
 function md5(str) {
     str = str.toLowerCase().trim();
@@ -27,21 +31,55 @@ function md5(str) {
 
 /**
  * Get list of available books from the user input
+ * @param {string} input - The searched word.
+ * @param {Object} res - Body object
+ * @param {User} user - User object
  */
 function getBooks(res,input,user){
 
-    	// console.log("####### Current User ID >>>  "+user._id);
+
+    	var regexSearch = new RegExp([input].join(""),"i");
 
 		Book.find({
-			$and: [
-			  { author: { $regex: ".*"+input+".*" } },
+			  $or: [ 
+			  {
+			  			$and: [
+			  { author: { $regex: regexSearch } },
 			  { "users_id.id": {$ne:user._id.toString()} },
 			  { nb_copy: { $gt: 0 }	}
-			]
-		 // author: input 
+			  			]
+			  		},
+			  		{
+			  			$and: [
+			  { title: { $regex: regexSearch } },
+			  { "users_id.id": {$ne:user._id.toString()} },
+			  { nb_copy: { $gt: 0 }	}
+			  			]
+			  		}
+
+				]
+
 		}, function foundBooks(err, items) {
-				 // getRentedBooks(res,user,"name");
-				 // console.log(items);
+	     		 res.json(items);
+    	});
+
+};
+
+
+/**
+ * Get user profiles according to the user input
+ * @param {string} input - The searched word
+ * @param {Object} res - Body object
+ */
+function getUsers(res,input){
+
+
+		User.find({
+			$and: [
+			  { name: { $regex: ".*"+input+".*" } },
+			  { profile: "normal" },
+			]
+		}, function foundBooks(err, items) {
 	     		 res.json(items);
     	});
 
@@ -49,59 +87,100 @@ function getBooks(res,input,user){
 
 /**
  * Inject the user informations to the profile partial
+ * @param {string} input - The searched word
+ * @param {Object} res - Body object
+ * @param {User} user - User object
  */
 function getRentedBooks(res,user,name){
 
-    	console.log("####### Current User ID >>>  "+user._id);
-
-  //   	Book.find({
-		// 	   "users_id.id": user._id 
-		//  // author: input 
-		// }, function foundBooks(err, items) {
-	     		 res.render('partials/' + name,{user : user});
-    	// });
-		
+  		 res.render('partials/' + name,{user : user});		
 
 };
 
 
+
+
+/**
+ * Route middleware to ensure user is logged in (Admin User)
+ * @param {Object} req - request object
+ * @param {Object} res - result object
+ * @param {Object} next - next object
+ */
+function isLoggedInAdmin(req, res, next) {
+
+
+	if (req.isAuthenticated() && req.user.profile == "admin")
+		return next();
+
+	res.redirect('/login');
+
+}
+
+
+/** @module BackOffice */
 module.exports = function(app, passport) {
 
 
 
 
-	// ADMIN SECTION =========================
-	app.get('/admin',isLoggedIn, function(req, res) {
-		
+	/**
+	 * Admin route
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.get('/admin',isLoggedInAdmin, function(req, res) {
 
-        console.log("Admin section");
+        var gravatar = getGravatarImage(req.user.email, ".jpg?s=100");
 
-        var gravatar = getGravatarImage(req.user.local.email, ".jpg?s=100");
-
-		res.render('admin.ejs', {
-			user : req.user, avatar: gravatar
-		});
+        Book.where({
+		 	"users_id" : {$exists:true}, $where:'this.users_id.length>0'
+		}).count(function (err, count) {
+			  if (err) return handleError(err);
+				  res.render('admin.ejs', {
+						user : req.user, avatar: gravatar, bookNumber: count
+					});
+			})
 
 	});
 
 
+	/**
+	 * Route for managing the books
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.post('/manage/books', function(req, res) {
 
 		var input = req.body.text;
 		var user = req.user;
 
 		getBooks(res,input,user);
-		// console.log("manage books");
+
+	});
+
+	/**
+	 * Route for searching users
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
+	app.post('/search/users', function(req, res) {
+
+		var input = req.body.text;
+		getUsers(res,input);
 
 	});
 
 
+	/**
+	 * Route for deleting one book
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.delete('/delete/book/:book_id', function(req, res) {
 
 		var currentBookID = req.params.book_id;
 		var userid = req.user._id;
 
-		console.log("####### Current Book ID >>>  "+currentBookID);
 
 		var query = {
 			 _id: currentBookID
@@ -118,24 +197,16 @@ module.exports = function(app, passport) {
 	});
 
 
+	/**
+	 * Route to modify a book
+	 * @param {Object} req - request object
+	 * @param {Object} res - result object
+	 */
 	app.delete('/modify/book/:book_id', function(req, res) {
 
 		var currentBookID = req.params.book_id;
 		var userid = req.user._id;
 
-		console.log("####### Current Book ID >>>  "+currentBookID);
-
-		// Update the current book
-		// Book.find({
-		// 	  "_id": currentBookID
-		// }, function foundBooks(err, items) {
-		// 		 // getRentedBooks(res,user,"name");
-		// 		 // console.log(items);
-	 //     		 // res.json(items);
-  //   	});
-
-		// res.json({bookid: currentBookID});
-		// res.json({isUpdated: true});
 		res.json({inUpdate: true});
 
 	});
@@ -143,7 +214,7 @@ module.exports = function(app, passport) {
 
 
 	// PARTIAL ROUTE
-	// take a look on frontOffice route
+	// take a look on frontOffice routes
 
 
 
@@ -151,12 +222,3 @@ module.exports = function(app, passport) {
 };
 
 
-
-
-// route middleware to ensure user is logged in
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated())
-		return next();
-
-	res.redirect('/login');
-}

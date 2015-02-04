@@ -12,7 +12,11 @@ var searchService = angular.module('backService', []);
 			},
 			modify : function(bookId) {
 				return $http.delete('/modify/book/'+bookId);
+			},
+			searchUsers : function(bookData) {
+				return $http.post('/search/users', bookData);
 			}
+			
 		}
 
 	}]);

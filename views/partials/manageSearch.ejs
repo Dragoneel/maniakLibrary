@@ -5,17 +5,16 @@
                             <input type="text" placeholder="Manage a book ?" class="search" ng-change="searchBooks()" value="" ng-model="formData.text"/>
                         </form>
 
-                        <!-- <button class="btn btn-default" ng-click="openBook()">Open me!</button> -->
 
                         <div class="row">
 
 
                         	<div ng-if="hits.isUpdated" class="alert alert-success noResult">
-							        updated successfuly
+							        Updated successfuly
 							</div>
 
 							<div ng-if="hits.isDeleted" class="alert alert-danger noResult">
-							        deleted successfuly
+							        Deleted successfuly
 							</div>
 
 
@@ -30,12 +29,19 @@
 				                            <div class="col-lg-3">
 				                                <div class="result">
 				                                    <img src="http://placehold.it/250x150"/>
-				                                    <h5><strong>{{book.title}}</strong></h5>
-				                                    <h6>By {{book.author}}</h6>
-				                                    <h6> <strong>ISBN:</strong> {{book.isbn}}</h6>
-				                                    <h6><strong>Remaining copy:</strong> {{book.nb_copy}}</h6>
-				                                <button  class="btn btn-primary" style="margin-top:20px;margin-left:15px" ng-click="modifyBook(book._id)">Modify</button>
-				                                <button  class="btn btn-danger" style="margin-top:20px;margin-left:15px" ng-click="deleteBook(book._id)">Delete</button>
+				                                    <div class="topInformations">
+					                                    <h5><strong><span ng-bind-html="book.title.substr(0,30) | highlight:formData.text"></span></strong></h5>
+					                                    <!-- <h3  ng-bind-html="book.title | highlight:formData.text"></h3> -->
+					                                    <h6>By 
+					                                    	<span ng-bind-html="book.author | highlight:formData.text"></span>
+					                                    </h6>
+					                                    <h6> <strong>ISBN:</strong> {{book.isbn.substr(0,10)}}</h6>
+					                                    <h6><strong>Remaining copy:</strong> {{book.nb_copy}}</h6>
+					                                </div>
+					                                <div class="bottomButtons">
+						                                <button  class="btn modify" ng-click="modifyBook(book._id)">Modify</button>
+						                                <button  class="btn delete" ng-click="deleteBook(book._id)">Delete</button>
+						                            </div>
 				                                </div>
 				                            </div>
 				                        </div>

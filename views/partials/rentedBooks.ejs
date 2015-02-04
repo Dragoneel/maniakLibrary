@@ -10,13 +10,12 @@
 		                            <div class="col-lg-3">
 		                                <div class="result">
 		                                    <img src="http://placehold.it/250x150"/>
-		                                    <h5><strong>{{book.title}}</strong></h5>
+		                                    <h5><strong>{{book.title.substring(0,30)}}</strong></h5>
 		                                    <h6>By {{book.author}}</h6>
-		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
-		                                    <h5>{{book.published}}</h5>
+		                                    <h5> <strong>ISBN:</strong> {{book.isbn.substr(0,10)}}</h5>
 		                                    <h5>Rented by:</h5>
-								            <ul ng-repeat="user in book.users_id" class="rentedBy">
-											  <li>{{user.email}}</li>
+								            <ul ng-repeat="user in book.users_id | limitTo: 4" class="rentedBy">
+											  <li>{{user.name}}</li>
 											</ul>
 		                                </div>
 

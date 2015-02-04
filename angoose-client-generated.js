@@ -413,10 +413,10 @@
 			"create": "$PROXIED$"
 		},
 		"paths": {
-			"local.email": {
+			"name": {
 				"enumValues": [],
 				"regExp": null,
-				"path": "local.email",
+				"path": "name",
 				"instance": "String",
 				"setters": [],
 				"getters": [],
@@ -425,10 +425,10 @@
 				},
 				"_index": null
 			},
-			"local.password": {
+			"profile": {
 				"enumValues": [],
 				"regExp": null,
-				"path": "local.password",
+				"path": "profile",
 				"instance": "String",
 				"setters": [],
 				"getters": [],
@@ -437,10 +437,10 @@
 				},
 				"_index": null
 			},
-			"facebook.id": {
+			"email": {
 				"enumValues": [],
 				"regExp": null,
-				"path": "facebook.id",
+				"path": "email",
 				"instance": "String",
 				"setters": [],
 				"getters": [],
@@ -449,130 +449,10 @@
 				},
 				"_index": null
 			},
-			"facebook.token": {
+			"password": {
 				"enumValues": [],
 				"regExp": null,
-				"path": "facebook.token",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"facebook.email": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "facebook.email",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"facebook.name": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "facebook.name",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"twitter.id": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "twitter.id",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"twitter.token": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "twitter.token",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"twitter.displayName": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "twitter.displayName",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"twitter.username": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "twitter.username",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"google.id": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "google.id",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"google.token": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "google.token",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"google.email": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "google.email",
-				"instance": "String",
-				"setters": [],
-				"getters": [],
-				"options": {
-					"type": "String"
-				},
-				"_index": null
-			},
-			"google.name": {
-				"enumValues": [],
-				"regExp": null,
-				"path": "google.name",
+				"path": "password",
 				"instance": "String",
 				"setters": [],
 				"getters": [],

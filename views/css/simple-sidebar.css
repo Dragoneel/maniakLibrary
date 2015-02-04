@@ -150,7 +150,7 @@ body{
     margin-top: 30px;
     border: 1px solid #cbd5dd;
     background: #fff;
-    height: 290px;
+    height: 360px;
 }
 
 .result img{
@@ -179,7 +179,32 @@ body{
     margin-right: 13px;
 }
 
+.topInformations{
+    height: 120px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
 
+.bottomButtons{
+    margin-top: 15px
+}
+
+.bottomButtons .modify{ 
+    display: block;
+    background-color: #16a085;
+    width: 150px;
+    border-radius: 2px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.bottomButtons .delete{ 
+    display: block;
+    background-color: #e74c3c;
+    border-radius: 2px;
+    margin: 5px auto;
+    width: 150px;
+    color: #fff;
+}
 
 /* btn rendre*/
 
@@ -202,18 +227,18 @@ body{
 /* btn rent*/
 
 .btn-rent{
+
+    display: block;
     background-color: #16a085;
-    padding: 6px 10px;
-    border: 1px solid #26b095;
-    margin-top: 20px;
-    box-shadow: 0px 1px 2px 0px #000;
-    margin-left: 15px;
+    width: 150px;
+    border-radius: 2px;
+    margin: 0 auto;
+    color: #fff;
+
 }
 
 .btn-rent:hover{
-    background-color: #16a085;
-    border: 1px solid #26b095;
-    box-shadow: none;
+    color: #fff;
 }
 
 
@@ -325,7 +350,9 @@ body{
         margin-right: 0;
     }
 
-    .result{
-    height: 320px;
-    }
+}
+
+
+.highlighted{
+    background-color: #f39c12;
 }

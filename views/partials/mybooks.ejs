@@ -9,13 +9,36 @@
 								<div  ng-repeat="book in books">
 		                            <div class="col-lg-3">
 		                                <div class="result">
+
+
 		                                    <img src="http://placehold.it/250x150"/>
-		                                    <h5><strong>{{book.title}}</strong></h5>
+
+
+		                                    <div class="topInformations">
+				                                    <h5><strong><span ng-bind-html="book.title.substr(0,30) | highlight:formData.text"></span></strong></h5>
+				                                    <!-- <h3  ng-bind-html="book.title | highlight:formData.text"></h3> -->
+				                                    <h6>By 
+				                                    	<span ng-bind-html="book.author | highlight:formData.text"></span>
+				                                    </h6>
+				                                    <h6><strong>ISBN:</strong> {{book.isbn.substr(0,10)}}</h6>
+				                                    <h6><strong>Published:</strong> {{book.published.substr(0,10)}}</h6>
+				                                </div>
+
+				                                <div class="bottomButtons">
+				                                	<button  class="btn btn-rent" ng-click="rendreBook(book._id)">Give back</button>
+				                                </div>
+
+
+
+		                                    <!-- <h5><strong>{{book.title}}</strong></h5>
 		                                    <h6>By {{book.author}}</h6>
 		                                    <h5> <strong>ISBN:</strong> {{book.isbn}}</h5>
 		                                    <h5>{{book.published}}</h5>
 
-		                            <button  class="btn btn-primary btn-rendre" ng-click="rendreBook(book._id)">Rendre</button>
+		                            <button  class="btn btn-primary btn-rendre" ng-click="rendreBook(book._id)">Rendre</button> -->
+
+
+
 		                                </div>
 
 		                            </div>
