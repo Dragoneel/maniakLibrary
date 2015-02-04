@@ -10,19 +10,20 @@ mongoose.connect('mongodb://localhost/maniak');
 // load up the book model
 var Book = require('./app/models/book');
 
-// load up the user model
-var User = require('./app/models/user');
-var bcrypt   = require('bcrypt-nodejs');
 
-
-// Query dbpedia for some books
+// Query dbpedia for all available books
 var endpoint = 'http://dbpedia.org/sparql';
+
+// var query = "SELECT  distinct ?title ?pages ?published ?genreName ?authorName ?isbn ?resume WHERE {?book a dbpedia-owl:Book . ?book dbpedia-owl:abstract ?resume . ?book dbpedia-owl:isbn ?isbn . ?book dbpedia-owl:numberOfPages ?pages. ?book dbpprop:releaseDate ?published. ?book dbpedia-owl:literaryGenre ?genre . ?genre dbpprop:name ?genreName. ?book dbpprop:name ?title. ?book dbpedia-owl:author ?author. ?author dbpprop:name ?authorName filter(langMatches(lang(?resume),'en')) } limit 10 ";
+
 
 var query = "SELECT   ?title ?pages ?published ?genreName ?isbn ?resume  (SAMPLE(?authorName) AS ?authorName) WHERE {?book a dbpedia-owl:Book . ?book dbpedia-owl:abstract ?resume . ?book dbpedia-owl:isbn ?isbn . ?book dbpedia-owl:numberOfPages ?pages. ?book dbpprop:releaseDate ?published. ?book dbpedia-owl:literaryGenre ?genre . ?genre dbpprop:name ?genreName. ?book dbpprop:name ?title. ?book dbpedia-owl:author ?author. ?author dbpprop:name ?authorName filter(langMatches(lang(?resume),'en')) } group by ?title ?pages ?published ?genreName ?isbn ?resume ";
 
 var client = new SparqlClient(endpoint);
 	client.query(query)
 	  .execute(function(error, results) {
+	  	// console.log(results.results.bindings[i]);
+
 
 	  	for (i in results.results.bindings)
 		{
@@ -40,35 +41,48 @@ var client = new SparqlClient(endpoint);
 
 
 		  	 newBook.save(function(err) {
-	                            // if (err)
-	                               // console.log(err);
+	                            if (err)
+	                               console.log(err);
+
+	                            // return done(null, newBook);
+	                            console.log("add");
 	         });
 		}
 
 
 
 
+
+		console.log("=========================================");
+		console.log("==                DONE                 ==");
+		console.log("=========================================");
+
+
+
 	  	});
 
 
-// Create an admin account
-var newUser = new User()
-
-newUser.name  = "Infomaniak";
-newUser.email = "devs@infomaniak.ch";
-newUser.password = bcrypt.hashSync("maniak", bcrypt.genSaltSync(8), null);
-newUser.profile = "admin";
 
 
-newUser.save(
-		function  (err) {
-			if (err) {console.log(err);};
-		}
-	);
 
-console.log("=========================================");
-console.log("==           Admin Account             ==");
-console.log("=========================================");
-console.log("==      Email: devs@infomaniak.ch      ==");
-console.log("==      password: maniak               ==");
-console.log("=========================================");
+
+
+
+
+
+
+// 	  SELECT   ?title ?pages ?published ?genreName ?isbn ?resume  (SAMPLE(?authorName) AS ?authorName) 
+// WHERE {
+//   ?book a dbpedia-owl:Book .
+//   ?book dbpedia-owl:abstract ?resume .
+//   ?book dbpedia-owl:isbn ?isbn .
+//   ?book dbpedia-owl:numberOfPages ?pages.
+//   ?book dbpprop:releaseDate ?published.
+//   ?book dbpedia-owl:literaryGenre ?genre .
+//   ?genre dbpprop:name ?genreName.
+//   ?book dbpprop:name ?title.
+//   ?book dbpedia-owl:author ?author.
+//   ?author dbpprop:name ?authorName
+// filter(langMatches(lang(?title),'en'))
+// }
+// group by ?title ?pages ?published ?genreName ?isbn ?resume 
