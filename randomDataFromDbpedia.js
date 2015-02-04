@@ -40,7 +40,7 @@ var client = new SparqlClient(endpoint);
 
 
 		  	 newBook.save(function(err) {
-	                            if (err)
+	                            // if (err)
 	                               // console.log(err);
 	         });
 		}
